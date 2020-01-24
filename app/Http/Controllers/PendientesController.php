@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Expediente;
+use App\Juzgado;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -15,25 +16,58 @@ class PendientesController extends Controller
 
     public function index()
     {
+        $juzgados = Juzgado::where('condition', '=', '1')->select('id', 'nombreJuzgado')->get();
         $pendientes = Expediente::where('user_id', auth()->id())->latest()->paginate(3);
-        return view('pendientes.index', compact('pendientes'));
+        return view('pendientes.index', compact('pendientes', 'juzgados'));
+    }
+
+    public function buscarp(Request $request)
+    {
+        $select = $request->get('selectp');
+        // $search = $request->get('search');
+
+        $juzgados = Juzgado::where('condition', '=', '1')->select('id', 'nombreJuzgado')->get();
+
+        $pendientes = Expediente::where('user_id', auth()->id())
+                    ->Where('juzgado_id', '=', $select)
+                    ->paginate(3);
+        return view('pendientes.index', compact('pendientes', 'juzgados'));
+
+        // return $expedientes;
+        // join('juzgados', 'expedientes.id' ,'expedientes.juzgado_id')
     }
 
     public function welcome()
     {
         $date = Carbon::now();
-
         $date = Carbon::parse($date);
         // $resta = Carbon::parse('--02');
         // return $date->diffInDays($resta);
         $pendientes = Expediente::where('user_id', auth()->id())
-                    ->whereDate('fechaAudiencia', '=', $date)->get();
-                // ->select('created_at', 'fechaAudiencia')->get();
-
+                    // ->whereDate('fechaAudiencia', '=', $date)->get();
+                ->select('id', 'numExpediente', 'fechaApertura', 'fechaAudiencia')->get();
         // $p = $pendientes->diffForHumans(); ->format('Y-m-d')
         return view('welcome', compact('pendientes'));
         // return $pendientes;
     }
+
+    // public function welcome()
+    // {
+    //     $date = Carbon::now();
+
+    //     $date = Carbon::parse($date)->subDays(2);
+    //     // return $date;
+    //     // $resta = Carbon::parse('--02');
+    //     // return $date->diffInDays($resta);
+    //     $pendientes = Expediente::where('user_id', auth()->id())
+    //                 ->whereDate('fechaAudiencia', '=', $date)->get();
+    //             // ->select('created_at', 'fechaAudiencia')->get();
+
+    //     // return $pendientes;
+    //     // $p = $pendientes->diffForHumans(); ->format('Y-m-d')
+    //     return view('welcome', compact('pendientes'));
+    //     // return $pendientes;
+    // }
 
     public function create()
     {

@@ -17,6 +17,7 @@ Route::resource('juzgados', 'JuzgadoController');
 Route::resource('procesos', 'ProcesoController');
 
 Route::get('/search', 'ExpedienteController@search')->name('expedientes.search');
+Route::get('/buscarp', 'PendientesController@buscarp')->name('expedientes.buscarp');
 Route::get('welcome', 'PendientesController@welcome')->name('welcome');
 
 Auth::routes();

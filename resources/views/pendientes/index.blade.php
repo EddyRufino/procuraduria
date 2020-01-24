@@ -18,17 +18,28 @@
                     </button>
                 </div>
                 <div class="card-body overflow-auto">
-                    <div class="form-group row">
-                        <div class="col-md-6">
-                            <div class="input-group">
-                                <select class="form-control col-md-3" id="opcion" name="opcion">
-                                  <option value="nombre">Nombre</option>
-                                  <option value="descripcion">Descripción</option>
-                                </select>
-                                <input type="text" id="texto" name="texto" class="form-control" placeholder="Texto a buscar">
-                                <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                    <div class="form-group">
+                        <form method="GET" action="{{ route('expedientes.buscarp') }}">
+                            <div class="col-md-6">
+                                <div class="input-group">
+
+                                    <select class="form-control col-md-3" name="selectp">
+                                        <option>Elige</option>
+                                        @foreach ($juzgados as $juzgado)
+                                            <option value="{{ $juzgado->id }}"
+                                                >
+                                                {{ $juzgado->nombreJuzgado }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+
+
+                                    {{-- <input name="search" class="form-control" placeholder="Texto a buscar"> --}}
+                                    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                                </div>
                             </div>
-                        </div>
+
+                        </form>
                     </div>
 
                     <ul class="list-group">
@@ -41,6 +52,9 @@
                                 <span class=" font-weight-bold"
                                     >
                                     {{ $expediente->numExpediente }}
+                                </span>
+                                <span>
+                                    {{ $expediente->juzgado->nombreJuzgado }}
                                 </span>
                                 <span class="text-black-50"
                                     >
